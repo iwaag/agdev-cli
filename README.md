@@ -2,15 +2,34 @@
 
 `agdev` is a Go CLI skeleton for agent-driven execution against AGDEV backends.
 
+The primary distribution model is a normal CLI binary. Docker support exists as an optional packaging and runtime path.
+
 ## Current Scope
 
 - Cobra-based command tree
 - Environment-driven configuration
 - Text or JSON output mode
-- Docker-first build and execution path
+- Installable local CLI binary
+- Optional Docker-based execution path
 - Stub commands for image and video generation
 
-## Commands
+## Local CLI Usage
+
+Build a local binary:
+
+```bash
+make build
+./bin/agdev version
+```
+
+Install into your Go bin directory:
+
+```bash
+make install
+agdev version
+```
+
+Direct execution during development:
 
 ```bash
 go run . version
@@ -28,18 +47,27 @@ go run . video generate first.png last.png --json
 
 ## Docker
 
-Build:
+Build a standalone CLI image:
 
 ```bash
 docker build -t agdev .
 ```
 
-Run:
+Run the CLI from that image:
 
 ```bash
 docker run --rm agdev version
 docker run --rm agdev image generate input.png "describe the edit"
 docker run --rm agdev video generate first.png last.png --json
+```
+
+Copy the binary into another service image:
+
+```dockerfile
+FROM agdev:latest AS agdev-cli
+
+FROM your-service-image
+COPY --from=agdev-cli /usr/local/bin/agdev /usr/local/bin/agdev
 ```
 
 ## Notes
