@@ -1,6 +1,6 @@
 # agdev
 
-`agdev` is a Go CLI skeleton for agent-driven execution against AGDEV backends.
+`agdev` is a Go CLI skeleton for agent-oriented tooling.
 
 The primary distribution model is a normal CLI binary. Docker support exists as an optional packaging and runtime path.
 
@@ -11,7 +11,7 @@ The primary distribution model is a normal CLI binary. Docker support exists as 
 - Text or JSON output mode
 - Installable local CLI binary
 - Optional Docker-based execution path
-- Stub commands for image and video generation
+- Versioned static instruction text for agents
 
 ## Local CLI Usage
 
@@ -20,6 +20,7 @@ Build a local binary:
 ```bash
 make build
 ./bin/agdev version
+./bin/agdev code instruction common
 ```
 
 Install into your Go bin directory:
@@ -27,6 +28,7 @@ Install into your Go bin directory:
 ```bash
 make install
 agdev version
+agdev code instruction common
 ```
 
 Direct execution during development:
@@ -35,15 +37,10 @@ Direct execution during development:
 go run . version
 go run . code instruction common
 go run . code instruction common --version latest --json
-go run . image generate input.png "describe the edit"
-go run . video generate first.png last.png --json
 ```
 
 ## Environment Variables
 
-- `AGDEV_API_BASE_URL`
-- `AGDEV_AUTH_TOKEN`
-- `AGDEV_REQUEST_TIMEOUT`
 - `AGDEV_OUTPUT_JSON`
 - `AGDEV_LOG_LEVEL`
 
@@ -59,8 +56,7 @@ Run the CLI from that image:
 
 ```bash
 docker run --rm agdev version
-docker run --rm agdev image generate input.png "describe the edit"
-docker run --rm agdev video generate first.png last.png --json
+docker run --rm agdev code instruction common
 ```
 
 Copy the binary into another service image:
@@ -73,7 +69,5 @@ COPY --from=agdev-cli /usr/local/bin/agdev /usr/local/bin/agdev
 ```
 
 ## Notes
-
-The current `generate` commands return stub responses only. The backend REST and socket integration points are prepared but not implemented yet.
 
 The `code instruction common` command reads versioned static instruction text embedded in the CLI binary.
