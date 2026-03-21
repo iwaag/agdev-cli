@@ -15,6 +15,18 @@ The primary distribution model is a normal CLI binary. Docker support exists as 
 
 ## Local CLI Usage
 
+Install the latest Linux release:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/iwaag/agdev-cli/main/install.sh | sh
+```
+
+Install a specific version:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/iwaag/agdev-cli/main/install.sh | sh -s -- --version v0.1.0
+```
+
 Build a local binary:
 
 ```bash
