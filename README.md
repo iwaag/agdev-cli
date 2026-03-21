@@ -33,6 +33,8 @@ Direct execution during development:
 
 ```bash
 go run . version
+go run . code instruction common
+go run . code instruction common --version latest --json
 go run . image generate input.png "describe the edit"
 go run . video generate first.png last.png --json
 ```
@@ -73,3 +75,5 @@ COPY --from=agdev-cli /usr/local/bin/agdev /usr/local/bin/agdev
 ## Notes
 
 The current `generate` commands return stub responses only. The backend REST and socket integration points are prepared but not implemented yet.
+
+The `code instruction common` command reads versioned static instruction text embedded in the CLI binary.
