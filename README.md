@@ -89,6 +89,8 @@ Publish a GitHub release build:
 
 The release script creates the next `v*` tag from the latest existing tag. Pushing a tag that matches `v*` triggers the GitHub Actions release workflow, which builds `agdev` for Linux amd64 and uploads the archive and checksum to GitHub Releases.
 
+You can also open the `Release` workflow in GitHub Actions and run it manually with an existing tag such as `v0.1.0` to rebuild and replace the release assets for that tag.
+
 You can also create a tag without pushing it yet:
 
 ```bash
