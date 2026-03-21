@@ -52,6 +52,23 @@ Build a standalone CLI image:
 docker build -t agdev .
 ```
 
+Build `agdev` from this GitHub repository inside another Dockerfile:
+
+```dockerfile
+FROM golang:1.23-alpine AS agdev-builder
+
+RUN apk add --no-cache git
+
+WORKDIR /src
+RUN git clone https://github.com/your-org/agdev-cli.git .
+RUN go build -o /out/agdev .
+
+FROM alpine:3.20
+COPY --from=agdev-builder /out/agdev /usr/local/bin/agdev
+
+ENTRYPOINT ["/usr/local/bin/agdev"]
+```
+
 Run the CLI from that image:
 
 ```bash
