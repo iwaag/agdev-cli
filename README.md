@@ -69,6 +69,21 @@ COPY --from=agdev-builder /out/agdev /usr/local/bin/agdev
 ENTRYPOINT ["/usr/local/bin/agdev"]
 ```
 
+Publish a GitHub release build:
+
+```bash
+./scripts/release.sh patch --push
+```
+
+The release script creates the next `v*` tag from the latest existing tag. Pushing a tag that matches `v*` triggers the GitHub Actions release workflow, which builds `agdev` for Linux amd64 and uploads the archive and checksum to GitHub Releases.
+
+You can also create a tag without pushing it yet:
+
+```bash
+./scripts/release.sh patch
+git push origin <new-tag>
+```
+
 Run the CLI from that image:
 
 ```bash

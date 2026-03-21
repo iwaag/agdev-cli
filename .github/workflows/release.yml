@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Build release archive
+        env:
+          VERSION: ${{ github.ref_name }}
+          COMMIT: ${{ github.sha }}
+        run: |
+          mkdir -p dist
+          DATE="$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
+            go build \
+            -ldflags "-s -w -X agdev/cmd.version=${VERSION} -X agdev/cmd.commit=${COMMIT} -X agdev/cmd.date=${DATE}" \
+            -o dist/agdev .
+          tar -C dist -czf dist/agdev_linux_amd64.tar.gz agdev
+          sha256sum dist/agdev_linux_amd64.tar.gz > dist/agdev_linux_amd64.tar.gz.sha256
+
+      - name: Publish GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/agdev_linux_amd64.tar.gz
+            dist/agdev_linux_amd64.tar.gz.sha256
