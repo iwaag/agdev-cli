@@ -9,7 +9,6 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"os"
 	"strings"
 	"time"
 
@@ -24,10 +23,15 @@ type Client struct {
 	httpClient *http.Client
 }
 
-func NewClient() *Client {
+type Config struct {
+	BaseURL   string
+	AuthToken string
+}
+
+func NewClient(cfg Config) *Client {
 	return &Client{
-		baseURL:   strings.TrimRight(strings.TrimSpace(os.Getenv("AGCODE_API_URL")), "/"),
-		authToken: strings.TrimSpace(os.Getenv("AUTH_TOKEN")),
+		baseURL:   strings.TrimRight(strings.TrimSpace(cfg.BaseURL), "/"),
+		authToken: strings.TrimSpace(cfg.AuthToken),
 		httpClient: &http.Client{
 			Timeout: requestTimeout,
 		},
@@ -39,7 +43,7 @@ func (c *Client) GetMission(ctx context.Context, missionID string) (map[string]a
 		return nil, app.WithExitCode(app.ExitUsage, fmt.Errorf("AGCODE_API_URL is not set"))
 	}
 	if c.authToken == "" {
-		return nil, app.WithExitCode(app.ExitAuth, fmt.Errorf("AUTH_TOKEN is not set"))
+		return nil, app.WithExitCode(app.ExitAuth, fmt.Errorf("authentication required: specify --token or run agdev login"))
 	}
 	if strings.TrimSpace(missionID) == "" {
 		return nil, app.WithExitCode(app.ExitUsage, fmt.Errorf("mission_id is required"))
