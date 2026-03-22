@@ -1,18 +1,14 @@
 # agdev
 
-`agdev` is a Go CLI skeleton for agent-oriented tooling.
+`agdev` is a CLI for agent-oriented AGDEV operations.
 
-The primary distribution model is a normal CLI binary. Docker support exists as an optional packaging and runtime path.
+## What It Can Do
 
-## Current Scope
+- print CLI version information
+- read embedded instruction documents
+- call authenticated backend operations such as `code mission`
 
-- Cobra-based command tree
-- Command-specific output format
-- Installable local CLI binary
-- Optional Docker-based execution path
-- Versioned static instruction text for agents
-
-## Local CLI Usage
+## Install
 
 Install the latest Linux release:
 
@@ -26,87 +22,58 @@ Install a specific version:
 curl -fsSL https://raw.githubusercontent.com/iwaag/agdev-cli/main/install.sh | sh -s -- --version v0.1.0
 ```
 
-Build a local binary:
+## Basic Usage
+
+Check the installed version:
 
 ```bash
-make build
-./bin/agdev version
-./bin/agdev code instruction common
+agdev version
 ```
 
-Install into your Go bin directory:
+Read the common instruction text:
 
 ```bash
-make install
-agdev version
 agdev code instruction common
 ```
 
-Direct execution during development:
+Read a specific instruction version:
 
 ```bash
-go run . version
-go run . code instruction common
+agdev code instruction common --version v1
 ```
 
-## Docker
+## Authentication
 
-Build a standalone CLI image:
+Log in once and save a local session:
 
 ```bash
-docker build -t agdev .
+agdev login --user <user_name>
 ```
 
-Build `agdev` from this GitHub repository inside another Dockerfile:
+If `--user` is omitted, `agdev` uses `KEYCLOAK_USER_NAME` when available. If that is also missing, it prompts for the username. Password entry is interactive and hidden.
 
-```dockerfile
-FROM golang:1.23-alpine AS agdev-builder
+`login` requires these environment variables:
 
-RUN apk add --no-cache git
+- `KEYCLOAK_URL`
+- `KEYCLOAK_REALM`
+- `KEYCLOAK_CLIENT_ID`
 
-WORKDIR /src
-RUN git clone https://github.com/your-org/agdev-cli.git .
-RUN go build -o /out/agdev .
+Optional:
 
-FROM alpine:3.20
-COPY --from=agdev-builder /out/agdev /usr/local/bin/agdev
+- `KEYCLOAK_USER_NAME`
 
-ENTRYPOINT ["/usr/local/bin/agdev"]
-```
+After a successful login, `agdev` stores a local session and uses it automatically for authenticated commands.
 
-Publish a GitHub release build:
+Example:
 
 ```bash
-./scripts/release.sh patch --push
-```
-
-The release script creates the next `v*` tag from the latest existing tag. Pushing a tag that matches `v*` triggers the GitHub Actions release workflow, which builds `agdev` for Linux amd64 and uploads the archive and checksum to GitHub Releases.
-
-You can also open the `Release` workflow in GitHub Actions and run it manually with an existing tag such as `v0.1.0` to rebuild and replace the release assets for that tag.
-
-You can also create a tag without pushing it yet:
-
-```bash
-./scripts/release.sh patch
-git push origin <new-tag>
-```
-
-Run the CLI from that image:
-
-```bash
-docker run --rm agdev version
-docker run --rm agdev code instruction common
-```
-
-Copy the binary into another service image:
-
-```dockerfile
-FROM agdev:latest AS agdev-cli
-
-FROM your-service-image
-COPY --from=agdev-cli /usr/local/bin/agdev /usr/local/bin/agdev
+export AGCODE_API_URL=http://127.0.0.1:8080
+agdev login --user alice
+agdev code mission mission-123
 ```
 
 ## Notes
 
-The `code instruction common` command reads versioned static instruction text embedded in the CLI binary.
+- `code mission` requires `AGCODE_API_URL`.
+- `code instruction common` reads static instruction text embedded in the binary and does not require login.
+- Development, build, Docker, and release details are documented in `README_DEV.md`.
