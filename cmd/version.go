@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"fmt"
-
 	"agdev/internal/output"
 
 	"github.com/spf13/cobra"
@@ -28,7 +26,6 @@ var versionCmd = &cobra.Command{
 			"date":    date,
 		}
 
-		text := fmt.Sprintf("version=%s commit=%s date=%s", version, commit, date)
-		return output.WriteSuccess(cmd.OutOrStdout(), currentConfig().OutputJSON, text, payload)
+		return output.WriteJSON(cmd.OutOrStdout(), payload)
 	},
 }

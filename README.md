@@ -7,8 +7,7 @@ The primary distribution model is a normal CLI binary. Docker support exists as 
 ## Current Scope
 
 - Cobra-based command tree
-- Environment-driven configuration
-- Text or JSON output mode
+- Command-specific output format
 - Installable local CLI binary
 - Optional Docker-based execution path
 - Versioned static instruction text for agents
@@ -48,13 +47,7 @@ Direct execution during development:
 ```bash
 go run . version
 go run . code instruction common
-go run . code instruction common --version latest --json
 ```
-
-## Environment Variables
-
-- `AGDEV_OUTPUT_JSON`
-- `AGDEV_LOG_LEVEL`
 
 ## Docker
 

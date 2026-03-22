@@ -6,13 +6,13 @@ import (
 	"io"
 )
 
-func WriteSuccess(w io.Writer, jsonMode bool, text string, payload any) error {
-	if jsonMode {
-		enc := json.NewEncoder(w)
-		enc.SetIndent("", "  ")
-		return enc.Encode(payload)
-	}
+func WriteJSON(w io.Writer, payload any) error {
+	enc := json.NewEncoder(w)
+	enc.SetIndent("", "  ")
+	return enc.Encode(payload)
+}
 
+func WriteText(w io.Writer, text string) error {
 	_, err := fmt.Fprintln(w, text)
 	return err
 }

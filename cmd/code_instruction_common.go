@@ -28,14 +28,6 @@ var codeInstructionCommonCmd = &cobra.Command{
 			return err
 		}
 
-		payload := map[string]string{
-			"scope":            doc.Scope,
-			"name":             doc.Name,
-			"version":          doc.Version,
-			"resolved_version": doc.ResolvedVersion,
-			"instruction":      doc.Body,
-		}
-
-		return output.WriteSuccess(cmd.OutOrStdout(), currentConfig().OutputJSON, doc.Body, payload)
+		return output.WriteText(cmd.OutOrStdout(), doc.Body)
 	},
 }
