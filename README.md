@@ -42,6 +42,18 @@ Read a specific instruction version:
 agdev code instruction common --version v1
 ```
 
+Fetch an OpenAPI document and save it locally:
+
+```bash
+agdev util openapi http://127.0.0.1:8080
+```
+
+Keep only specific tagged endpoints:
+
+```bash
+agdev util openapi http://127.0.0.1:8080 --tags mission,auth -o .hints/backend.json
+```
+
 ## Authentication
 
 Log in once and save a local session:
